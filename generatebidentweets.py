@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Wed Aug  5 17:53:44 2020
 
@@ -12,7 +11,8 @@ import markovify
 import tweetreply
 import re
 import random
-
+import os
+import tkinter
 
 
 
@@ -111,16 +111,16 @@ class TwitterBot:
         if self.name == "JoeBiden":
             if randomInt == 0:
                 rpost = "look here jack, " + post
-            if randomInt == 1:
+            elif randomInt == 1:
                 rpost = "Come on maaan, " + post
-            if randomInt == 2:
+            else:
                 rpost = "look here fat, " + post
         if self.name == "realDonaldTrump":
             if randomInt == 0:
                 rpost = "listen, " + post
-            if randomInt == 1:
+            elif randomInt == 1:
                 rpost =  post + ", TRUST ME!"
-            if randomInt == 2:
+            else:
                 rpost = "FAKE NEWS! " + post
         
         self.api.update_status(status = rpost, in_reply_to_status_id = postid , auto_populate_reply_metadata=True)      
@@ -132,10 +132,10 @@ class TwitterBot:
         post = self.genpost("p")
         reply = str(input(question+' (y/n): ')).lower().strip()
         
-        if reply[0] == 'y':
+        if reply == 'y':
             self.makepost(post)
-            sys.exit()
-        if reply[0] == 'n':
+            return
+        elif reply == 'n':
             return self.yes_or_no('how about this one?')
         else:
             return self.yes_or_no("Uhhhh... please enter ")
@@ -199,35 +199,72 @@ def wait():
 
 
 def main():
-    print ("Would you like to run BidenBot or Trumpbot?\n 1:Bidenbot\n 2:Trumpbot")
-    reply = int(input('(1/2): '))
+    Bots = []
+    print ("Select one or more bots:\n 1:All\n 2:Bidenbot\n 3:Trumpbot")
+    reply = int(input('(1/2/3): '))
     if reply == 1:
-        Bot1 = TwitterBot("JoeBiden") 
-    if reply == 2:
-        Bot1 = TwitterBot("realDonaldTrump")
+        allnames = allbotnames()
+        for name in allnames:
+            Bots.append(TwitterBot(name))       
+    elif reply == 2:
+        Bots[0] = TwitterBot("JoeBiden")
+    elif reply == 3:
+        Bots[0] = TwitterBot("realDonaldTrump")
+    else: return main
     
     print ("Auto run or select single post?\n 1:autorun\n 2:single post")
-    reply = int(input('(1/2): '))
-    if reply == 2:
-        Bot1.init = True
-        Bot1.yes_or_no("would you like Simulation Biden to make this post")
+    reply = int(input('(1/2/3): '))
+    
+    #if you choose autorun
     if reply == 1:
-        print ("Enter time frame betwen posts in minutes:")
-        looptime = int(input(': '))*2
-        
-        global con
-        _thread.start_new_thread(Bot1.looping, (looptime,)) 
-        input('press enter to exit') 
-        Bot1.con = False     
+        for bot in Bots:
+            print ("Enter time frame betwen posts in minutes for "+ bot.name +":")
+            looptime = int(input(': '))*2
+            print('initiating' + bot.name)
+            _thread.start_new_thread(bot.looping, (looptime,)) #Initiates bot loops for continual posting
+        input('press enter to exit')
+        for bot in Bots:
+            bot.con = False     
         sys.exit()
-                 
+        
+    elif reply == 2:
+        for bot in Bots:
+            bot.init = True
+            bot.yes_or_no("would you like "+ bot.name +" to make this post")
     else: 
         return main()
+    
+    
+
+    
+    
+    
+    
+    
+    
+    #return names of all bots
+def allbotnames():
+    file_names = os.listdir()
+    files = []
+    for file in file_names:
+        if "BotKeys" in file:
+            files.append(file.replace('BotKeys.txt',''))
+    return files
+
         
        
         
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+    
+
 
 
 
