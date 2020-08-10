@@ -19,33 +19,7 @@ import random
 
 
 
-
-
-
-
-with open('tweetdata.txt', 'r', encoding='utf-8') as f:
-    textfile = f.read()
-    f.seek(0, 0)
-    lines = f.readlines()
-
-
-
-TEXT_LENGTH = len(textfile)
-LINENUM = len(lines)
-
-print(f'Number of characters in text: {TEXT_LENGTH}')
-print(f'Number of lines in text: {LINENUM}')
-
-lastid = 1
-
-text_model = markovify.Text(textfile)
-con = 1
-#change init to true to bake post at start of looping phase
-
-
-
-
-class bidenbot: 
+class TwitterBot:    
     def __init__(self, name):
         self.con = True
         self.lastid = 1
@@ -73,20 +47,31 @@ class bidenbot:
         
         # Create API object
         self.api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+        
+        #Generate Markov Model
 
-            
+        with open('tweetdata' + self.name + '.txt', 'r', encoding='utf-8') as f:
+            textfile = f.read()      
+        TEXT_LENGTH = len(textfile)            
+        print(f'Number of characters in text: {TEXT_LENGTH}')               
+        self.text_model = markovify.Text(textfile)
+ 
+    
             
         
         
 #Check the bots most recent mention, returns post id    
     def checknewR(self):
-        newr = self.api.mentions_timeline(count=1) 
-        new = newr[0].id
+        newr = self.api.mentions_timeline(count=1)
+        try:
+            new = newr[0].id
+        except:
+            new = newr
         return new
 
     
     def genpost(self, kind):
-        post = text_model.make_sentence(tries=50)
+        post = self.text_model.make_sentence(tries=50)
         if post == None:
             return self.genpost()
 
@@ -103,7 +88,6 @@ class bidenbot:
                 post = post.replace('  ', ' ')
             #check length
             if len(post) > 280:
-                print(post)
                 return self.genpost("p")  
             
         #for generating replies
@@ -111,6 +95,7 @@ class bidenbot:
             post = re.sub(r'(https|http)?:\/\/(\w|\.|\/|\?|\=|\&|\%)*\b', '', post, flags=re.MULTILINE)
             if len(post) > 264:
                 return self.genpost("r")
+        print(post)    
         return post
 
 #for sending actual post
@@ -122,26 +107,32 @@ class bidenbot:
   
         
     def makereply(self, post, postid):
-        
         randomInt = random.randint(0, 2)
-        if randomInt == 0:
-            rpost = "look here jack, " + post
-        if randomInt == 1:
-            rpost = "Come on maaan, " + post
-        if randomInt == 2:
-            rpost = "look here fat, " + post
+        if self.name == "JoeBiden":
+            if randomInt == 0:
+                rpost = "look here jack, " + post
+            if randomInt == 1:
+                rpost = "Come on maaan, " + post
+            if randomInt == 2:
+                rpost = "look here fat, " + post
+        if self.name == "realDonaldTrump":
+            if randomInt == 0:
+                rpost = "listen, " + post
+            if randomInt == 1:
+                rpost =  post + ", TRUST ME!"
+            if randomInt == 2:
+                rpost = "FAKE NEWS! " + post
         
         self.api.update_status(status = rpost, in_reply_to_status_id = postid , auto_populate_reply_metadata=True)      
 
     
                       
-        #initial option to post once or run continuously
+        #selecting a post if you choose to only make one
     def yes_or_no(self, question):
         post = self.genpost("p")
         reply = str(input(question+' (y/n): ')).lower().strip()
         
         if reply[0] == 'y':
-            self.init = True
             self.makepost(post)
             sys.exit()
         if reply[0] == 'n':
@@ -158,7 +149,6 @@ class bidenbot:
         while self.con == True:
             post = self.genpost("p")     
             if self.init == True:
-                 print(post)
                  self.makepost(post)
             if self.init == False:
                 self.init = True
@@ -174,7 +164,7 @@ class bidenbot:
      
                 if self.checknewR() != self.lastid:
                     self.lastid = self.checknewR() 
-                    tweetreplyV = tweetreply.checkanreply()
+                    tweetreplyV = tweetreply.main(self.name)
                     print ("tweet to reply to: " + str(tweetreplyV[1]))
                     
                     if tweetreplyV[1] == True:
@@ -209,21 +199,26 @@ def wait():
 
 
 def main():
-    JoeBiden = bidenbot("JoeBiden")  
+    print ("Would you like to run BidenBot or Trumpbot?\n 1:Bidenbot\n 2:Trumpbot")
+    reply = int(input('(1/2): '))
+    if reply == 1:
+        Bot1 = TwitterBot("JoeBiden") 
+    if reply == 2:
+        Bot1 = TwitterBot("realDonaldTrump")
     
     print ("Auto run or select single post?\n 1:autorun\n 2:single post")
     reply = int(input('(1/2): '))
     if reply == 2:
-        JoeBiden.yes_or_no("would you like Simulation Biden to make this post")
+        Bot1.init = True
+        Bot1.yes_or_no("would you like Simulation Biden to make this post")
     if reply == 1:
         print ("Enter time frame betwen posts in minutes:")
         looptime = int(input(': '))*2
         
         global con
-        looptime = looptime*2
-        _thread.start_new_thread(JoeBiden.looping, (looptime,)) 
+        _thread.start_new_thread(Bot1.looping, (looptime,)) 
         input('press enter to exit') 
-        JoeBiden.con = False     
+        Bot1.con = False     
         sys.exit()
                  
     else: 
@@ -233,7 +228,6 @@ def main():
         
 if __name__ == "__main__":
     main()
-
 
 
 
