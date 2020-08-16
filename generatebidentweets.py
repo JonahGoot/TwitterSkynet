@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created on Wed Aug  5 17:53:44 2020
 
@@ -93,7 +94,7 @@ class TwitterBot:
         #for generating replies
         if kind == "r":
             post = re.sub(r'(https|http)?:\/\/(\w|\.|\/|\?|\=|\&|\%)*\b', '', post, flags=re.MULTILINE)
-            if len(post) > 264:
+            if len(post) > 227:
                 return self.genpost("r")
         print(post)    
         return post
@@ -107,21 +108,36 @@ class TwitterBot:
   
         
     def makereply(self, post, postid):
+        print(postid)
+        randomInt = random.randint(0,1)
+        if randomInt == 1:
+            post = post.lower()
+            post = "Because of how short ben shapiro is, "+post
+        
+        
+        
         randomInt = random.randint(0, 2)
         if self.name == "JoeBiden":
             if randomInt == 0:
-                rpost = "look here jack, " + post
+                post = post.lower()
+                rpost = "Look here jack, " + post
             elif randomInt == 1:
+                post = post.lower()
                 rpost = "Come on maaan, " + post
             else:
-                rpost = "look here fat, " + post
+                post = post.lower()
+                rpost = "Look here fat, " + post
+                
         if self.name == "realDonaldTrump":
             if randomInt == 0:
-                rpost = "listen, " + post
+                post = post.lower()
+                rpost = "Listen, " + post
             elif randomInt == 1:
                 rpost =  post + ", TRUST ME!"
             else:
+                post = post.lower()
                 rpost = "FAKE NEWS! " + post
+        
         
         self.api.update_status(status = rpost, in_reply_to_status_id = postid , auto_populate_reply_metadata=True)      
 
@@ -164,7 +180,7 @@ class TwitterBot:
      
                 if self.checknewR() != self.lastid:
                     self.lastid = self.checknewR() 
-                    tweetreplyV = tweetreply.main(self.name)
+                    tweetreplyV = tweetreply.main(self.name, allbotnames(), "reply")
                     print ("tweet to reply to: " + str(tweetreplyV[1]))
                     
                     if tweetreplyV[1] == True:
@@ -173,6 +189,18 @@ class TwitterBot:
                         for TWEE in makeTWEE:
                             post = self.genpost("r")
                             self.makereply(post, TWEE)
+                            
+                tweetcom = tweetreply.main(self.name, allbotnames(), "com") 
+                if tweetcom[1] == True:
+                    
+                    makeTWE = tweetcom[0]
+                    for TWE in makeTWE:
+                        post = self.genpost("r")
+                        self.makereply(post, TWE)
+                            
+                            
+                            
+                            
                         
                 for i in range(30):
                     time.sleep(1)
@@ -256,7 +284,6 @@ def allbotnames():
         
 if __name__ == "__main__":
     main()
-
 
 
 
