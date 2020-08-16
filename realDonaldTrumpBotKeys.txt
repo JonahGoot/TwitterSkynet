@@ -1,5 +1,5 @@
-api_key = sl9PVFa9aaTohRkIJyy1p7tl8
-api_secret_key = LvcdbNWR3ls1Ns9tg7FB3dHTsuC0sVrfeLmPPGMrI4IZpaN2UH
-bearer_token = AAAAAAAAAAAAAAAAAAAAAJl0GgEAAAAANayCdDRak31lyGmibVooze4xEHM%3DDlUFrwX6tgM9uvVgTsmAJ58ZkzlVKiyZFcbFMf79i2w9z7MCdv
-access_token = 1291219258593153024-oPTaCp2echfcbfDFeJaJY6vB7KPBzL
-access_token_secret = PAMBBGj7jpSwAP4abzxYMjOPbadU27RCQJBDyZOGnqs21
+api_key= "key"
+api_secret_key= "key"
+bearer_token= "key"
+access_token= "key"
+access_token_secret= "key"
