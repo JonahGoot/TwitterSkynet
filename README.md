@@ -13,7 +13,8 @@ in the gui later
 4) your parody bot is ready, run as many bots as you want through the gui, or directly through the generatebidentweets.py file 
 
 
-
+(the main file name is generatebidentweets cos that's what i started with and i haven't bothered to change it yet but it works with any bot, and currently I have it running 
+bot a trump and a biden parody bot. this is not a partisan project in any way)
 
 
 
