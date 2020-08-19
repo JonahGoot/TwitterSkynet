@@ -14,7 +14,7 @@ in the gui later
 
 Note:
 the main file name is generatebidentweets because that's what i started with and I haven't bothered to change it yet but it works with any bot, and currently I have it running 
-both a trump and a biden bot. this is not a partisan project in any way. Also I'm sure this code could be much more neat, but this being my first python project, I learned a lot from scratch as I went, and did a bit of working backwards at some points.
+both a trump and a biden bot. this is not a partisan project in any way. Also I'm sure this code could be much more neat, but this was my first python project, so I learned a lot from scratch as I went and ended up kinda working backwards at times.
 
 
 
