@@ -12,9 +12,9 @@ in the gui later
 3) create a new "username you scraped from"BotKeys.txt, with the keys from a new twitter account that will be your bot
 4) your parody bot is ready, run as many bots as you want through the gui, or directly through the generatebidentweets.py file 
 
-
-(the main file name is generatebidentweets because that's what i started with and I haven't bothered to change it yet but it works with any bot, and currently I have it running 
-both a trump and a biden bot. this is not a partisan project in any way)
+Note:
+the main file name is generatebidentweets because that's what i started with and I haven't bothered to change it yet but it works with any bot, and currently I have it running 
+both a trump and a biden bot. this is not a partisan project in any way. Also I'm sure this code could be much more neat, but this being my first python project, I learned a lot from scratch as I went, and did a bit of working backwards at some points.
 
 
 
